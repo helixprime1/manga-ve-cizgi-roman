@@ -1,0 +1,37 @@
+# Temel Güvenlik Ayarları
+
+# Hassas dosyalara erişimi engelle
+<Files ~ "\.(sql|log|ini|conf|bak|backup)$">
+    Require all denied
+</Files>
+
+# .htaccess dosyasına erişimi engelle
+<Files ".htaccess">
+    Require all denied
+</Files>
+
+# includes dizinine direkt erişimi engelle
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^backups/ - [F,L]
+</IfModule>
+
+# Güvenlik başlıkları (opsiyonel)
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options SAMEORIGIN
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Dizin listelemeyi engelle
+Options -Indexes
+
+# UTF-8 encoding
+AddDefaultCharset UTF-8
+
+# PHP ayarları
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+</IfModule> 
