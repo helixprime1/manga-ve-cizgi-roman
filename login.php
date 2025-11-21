@@ -15,6 +15,12 @@ $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = sanitizeInput($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+
+    // CSRF token doğrulama
+    $csrfToken = $_POST[CSRF_TOKEN_NAME] ?? '';
+    if (!validateCSRFToken($csrfToken)) {
+        $errors[] = "Güvenlik doğrulaması başarısız oldu. Lütfen formu tekrar gönderin.";
+    }
     
     // Kullanıcı adı kontrolü
     if (empty($username)) {
@@ -201,11 +207,12 @@ $page_title = 'Giriş Yap';
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 <?php endif; ?>
-                
+
                 <form method="POST" action="login.php<?php echo isset($_GET['redirect']) ? '?redirect=' . $_GET['redirect'] : ''; ?>">
+                    <?php echo getCSRFTokenInput(); ?>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="username" name="username" 
-                               placeholder="Kullanıcı adı veya e-posta" 
+                        <input type="text" class="form-control" id="username" name="username"
+                               placeholder="Kullanıcı adı veya e-posta"
                                value="<?php echo isset($username) ? $username : ''; ?>" required>
                         <label for="username"><i class="fas fa-user me-2"></i>Kullanıcı Adı veya E-posta</label>
                     </div>
