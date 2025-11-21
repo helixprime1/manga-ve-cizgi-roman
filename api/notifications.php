@@ -12,6 +12,14 @@ if (!isLoggedIn()) {
 }
 
 $user_id = $_SESSION['user_id'];
+$current_user = getUserById($user_id);
+
+if (!$current_user) {
+    echo json_encode(['success' => false, 'message' => 'Kullanıcı bulunamadı.']);
+    exit;
+}
+
+$user_role = $_SESSION['role'] ?? ($current_user['role'] ?? '');
 $action = $_REQUEST['action'] ?? '';
 
 switch ($action) {
@@ -93,7 +101,7 @@ switch ($action) {
         
     case 'send':
         // Admin yetkisi gerekli
-        if ($_SESSION['role'] !== 'admin') {
+        if ($user_role !== 'admin') {
             echo json_encode(['success' => false, 'message' => 'Bu işlem için yetkiniz yok.']);
             exit;
         }
