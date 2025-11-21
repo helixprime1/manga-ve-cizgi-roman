@@ -159,15 +159,24 @@ MangaÇizgiRoman, manga ve çizgi roman tutkunları için geliştirilmiş modern
    CREATE DATABASE manga_comic_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
    ```
 
-3. **Yapılandırma Dosyasını Düzenleyin**:
-   ```php
-   // includes/config.php
-   define('DB_HOST', 'localhost');
-   define('DB_USER', 'veritabani_kullanici_adi');
-   define('DB_PASS', 'veritabani_sifresi');
-   define('DB_NAME', 'manga_comic_db');
-   define('SITE_URL', 'http://localhost/mangacizgiroman');
+3. **Veritabanı Ortam Değişkenlerini Tanımlayın**:
+   Uygulama veritabanı bilgilerini doğrudan kaynak koda yazmak yerine ortam değişkenlerinden okur. Bu değişkenleri sunucu yapılandırmanıza ekleyin (ör. Apache/Nginx `SetEnv`, sistemd unit `Environment`, veya bir `.env` dosyasını güvenli bir şekilde yükleyen araçlarla). Gereken değişkenler:
+
+   - `DB_HOST` (varsayılan: `localhost`)
+   - `DB_USER` (**gerekli**)
+   - `DB_PASS` (**gerekli**, boş şifre kullanacaksanız değişkeni boş string olarak tanımlayın)
+   - `DB_NAME` (varsayılan: `manga_comic_db`)
+
+   Örnek `.env` içeriği:
+   ```env
+   DB_HOST=localhost
+   DB_USER=veritabani_kullanici_adi
+   DB_PASS=guclu_sifre
+   DB_NAME=manga_comic_db
+   SITE_URL=https://ornek-alanadi.com
    ```
+
+   > Not: `DB_USER` veya `DB_PASS` tanımlı değilse uygulama başlatılırken hata verir ve hangi değişkenlerin eksik olduğunu bildirir.
 
 4. **Klasör İzinlerini Ayarlayın**:
    ```bash

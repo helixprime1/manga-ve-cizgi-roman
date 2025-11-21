@@ -3,11 +3,33 @@
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
-// Veritabanı bağlantı bilgileri
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'manga_comic_db');
+// Veritabanı bağlantı bilgileri (ortam değişkenleri üzerinden yüklenir)
+$db_host = getenv('DB_HOST') ?: 'localhost';
+$db_user = getenv('DB_USER');
+$db_pass = getenv('DB_PASS');
+$db_name = getenv('DB_NAME') ?: 'manga_comic_db';
+
+$missing_env = [];
+
+if ($db_user === false || $db_user === '') {
+    $missing_env[] = 'DB_USER';
+}
+
+if ($db_pass === false) {
+    // Şifre boş bırakılmak isteniyorsa değişkeni tanımlı şekilde boş string yapın.
+    $missing_env[] = 'DB_PASS';
+}
+
+if (!empty($missing_env)) {
+    $message = 'Eksik ortam değişkenleri: ' . implode(', ', $missing_env) . '. ' .
+        'Lütfen veritabanı bilgilerini güvenli bir şekilde ortam değişkenleriyle tanımlayın.';
+    die($message);
+}
+
+define('DB_HOST', $db_host);
+define('DB_USER', $db_user);
+define('DB_PASS', $db_pass);
+define('DB_NAME', $db_name);
 
 // Veritabanı bağlantısı
 $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
