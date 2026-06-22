@@ -48,7 +48,12 @@ define('LOGIN_LOCKOUT_TIME', 300); // 5 dakika
 // Oturum ayarları (session_start() çağrılmadan önce yapılmalı)
 if (session_status() == PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
-    ini_set('session.cookie_secure', 0); // HTTPS kullanırken 1 yapın
+    $is_https = (
+        (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') ||
+        (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
+        parse_url(SITE_URL, PHP_URL_SCHEME) === 'https'
+    );
+    ini_set('session.cookie_secure', $is_https ? 1 : 0);
     ini_set('session.use_only_cookies', 1);
     ini_set('session.cookie_samesite', 'Strict');
 }
