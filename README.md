@@ -142,7 +142,7 @@ MangaÇizgiRoman, manga ve çizgi roman tutkunları için geliştirilmiş modern
   - session
   - json
   - mbstring
-  - curl (API entegrasyonları için)
+ - curl (API entegrasyonları için)
 
 ### Kurulum Adımları
 
@@ -152,24 +152,26 @@ MangaÇizgiRoman, manga ve çizgi roman tutkunları için geliştirilmiş modern
    cd mangacizgiroman
    ```
 
-2. **Veritabanını Oluşturun**:
+2. **PHP Bağımlılıklarını Yükleyin**:
+   ```bash
+   composer install
+   ```
+
+3. **Veritabanını Oluşturun**:
    - MySQL veritabanı yönetim aracınızda yeni bir veritabanı oluşturun
    - `database.sql` dosyasını içe aktarın
    ```sql
    CREATE DATABASE manga_comic_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
    ```
 
-3. **Yapılandırma Dosyasını Düzenleyin**:
-   ```php
-   // includes/config.php
-   define('DB_HOST', 'localhost');
-   define('DB_USER', 'veritabani_kullanici_adi');
-   define('DB_PASS', 'veritabani_sifresi');
-   define('DB_NAME', 'manga_comic_db');
-   define('SITE_URL', 'http://localhost/mangacizgiroman');
+4. **Ortam Değişkenlerini Ayarlayın**:
+   ```bash
+   cp .env.example .env
    ```
+   - `.env` dosyasındaki `DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME` ve `SITE_URL` değerlerini güncelleyin.
+   - Ortam değişkenleri tanımlanmazsa uygulama varsayılan değerleri (localhost ve hatırlatıcı kimlik bilgileri) kullanır.
 
-4. **Klasör İzinlerini Ayarlayın**:
+5. **Klasör İzinlerini Ayarlayın**:
    ```bash
    chmod 755 -R uploads/
    chmod 755 -R admin/uploads/
@@ -178,7 +180,7 @@ MangaÇizgiRoman, manga ve çizgi roman tutkunları için geliştirilmiş modern
    chmod 755 -R backups/
    ```
 
-5. **SSL Sertifikası** (Üretim için önerilir):
+6. **SSL Sertifikası** (Üretim için önerilir):
    ```apache
    # .htaccess
    RewriteEngine On
