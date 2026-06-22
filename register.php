@@ -33,11 +33,15 @@ $success = false;
 
 // Form gönderildi mi kontrol et
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST[CSRF_TOKEN_NAME]) || !validateCSRFToken($_POST[CSRF_TOKEN_NAME])) {
+        $errors[] = "Geçersiz veya eksik güvenlik tokeni. Lütfen formu yeniden gönderin.";
+    }
+
     $username = sanitizeInput($_POST['username'] ?? '');
     $email = sanitizeInput($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $password_confirm = $_POST['password_confirm'] ?? '';
-    
+
     // Kullanıcı adı kontrolü
     if (empty($username)) {
         $errors[] = "Kullanıcı adı gereklidir.";
@@ -251,8 +255,9 @@ $default_language = getSetting('default_language', 'tr');
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                         <?php endif; ?>
-                        
+
                         <form method="POST" action="register.php" id="registerForm">
+                            <?php echo getCSRFTokenInput(); ?>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3">
